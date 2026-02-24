@@ -539,8 +539,9 @@ export const MediaEvents = () => {
     );
 };
 
-const BlogFeatureCard = ({ category, title, readTime, img, delay }) => {
+const DataMatrixCard = ({ category, title, impact, readTime, img }) => {
     const cardRef = useRef();
+    const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseMove = (e) => {
         if (!cardRef.current) return;
@@ -549,23 +550,30 @@ const BlogFeatureCard = ({ category, title, readTime, img, delay }) => {
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
 
-        const multiplier = 10;
+        const multiplier = 5;
         const xRotate = multiplier * (y / (rect.height / 2));
         const yRotate = -multiplier * (x / (rect.width / 2));
 
-        card.style.transform = `perspective(1200px) rotateX(${xRotate}deg) rotateY(${yRotate}deg) translateY(-10px) scale(1.02)`;
+        card.style.transform = `perspective(1000px) rotateX(${xRotate}deg) rotateY(${yRotate}deg) scale(1.02)`;
         card.style.transition = 'none';
         card.style.borderColor = 'rgba(227, 24, 45, 0.4)';
-        card.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.7), 0 0 25px rgba(227, 24, 45, 0.15)';
+        card.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(227, 24, 45, 0.1)';
+
+        const overlay = document.getElementById(`overlay-${title.replace(/\\s+/g, '')}`);
+        if (overlay) overlay.style.opacity = '0.9';
     };
 
     const handleMouseLeave = () => {
         if (!cardRef.current) return;
         const card = cardRef.current;
-        card.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)`;
-        card.style.transition = 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+        card.style.transition = 'all 0.4s ease-out';
         card.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-        card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+        card.style.boxShadow = 'none';
+
+        const overlay = document.getElementById(`overlay-${title.replace(/\\s+/g, '')}`);
+        if (overlay) overlay.style.opacity = '0.5';
+        setIsHovered(false);
     };
 
     return (
@@ -573,55 +581,86 @@ const BlogFeatureCard = ({ category, title, readTime, img, delay }) => {
             ref={cardRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => setIsHovered(true)}
             style={{
                 position: 'relative',
-                background: `linear-gradient(rgba(11, 11, 11, 0.3), rgba(11, 11, 11, 0.9)), url(${img}) center/cover`,
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
+                background: '#0B0B0B',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: '16px',
-                padding: '2.5rem',
-                minHeight: '400px',
+                minHeight: '420px',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'flex-end',
-                cursor: 'pointer',
-                transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
-                transformStyle: 'preserve-3d',
+                justifyContent: 'space-between',
+                cursor: 'crosshair',
+                transition: 'all 0.4s ease-out',
                 overflow: 'hidden',
-                animation: `fadeInUp 0.8s ease backwards ${delay}s`
+                padding: '2.5rem'
             }}
         >
-            <div style={{ transform: 'translateZ(40px)', position: 'relative', zIndex: 2 }}>
+            {/* Background image with color burn for a technical feel */}
+            <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'grayscale(100%) contrast(120%) brightness(40%)', zIndex: 0 }}></div>
+
+            {/* Dark Matrix Overlay */}
+            <div id={`overlay-${title.replace(/\\s+/g, '')}`} style={{
+                position: 'absolute', inset: 0,
+                backgroundColor: 'rgba(11,11,11,0.5)',
+                backgroundImage: 'linear-gradient(rgba(227, 24, 45, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(227, 24, 45, 0.05) 1px, transparent 1px)',
+                backgroundSize: '20px 20px',
+                zIndex: 1, transition: 'opacity 0.4s ease'
+            }}></div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 2 }}>
                 <span style={{
                     display: 'inline-block',
-                    fontSize: '0.8rem',
-                    fontFamily: 'var(--font-heading)',
-                    backgroundColor: 'rgba(227, 24, 45, 0.9)',
-                    color: '#fff',
-                    padding: '0.4rem 1rem',
-                    borderRadius: '4px',
-                    letterSpacing: '0.1em',
-                    marginBottom: '1rem',
-                    textTransform: 'uppercase'
+                    fontSize: '0.75rem',
+                    fontFamily: 'monospace',
+                    color: isHovered ? '#fff' : 'var(--accent)',
+                    padding: '0.3rem 0',
+                    letterSpacing: '0.15em',
+                    borderBottom: '1px solid rgba(227,24,45,0.5)',
+                    textTransform: 'uppercase',
+                    transition: 'all 0.4s ease'
                 }}>
-                    {category}
+                    [ {category} ]
                 </span>
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.8rem', marginBottom: '1rem', color: '#fff', lineHeight: '1.2' }}>
-                    {title}
-                </h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--subtext)', fontSize: '0.85rem' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-                        {readTime}
-                    </span>
-                    <span style={{ width: '4px', height: '4px', background: 'var(--accent)', borderRadius: '50%' }}></span>
-                    <span>Read Article</span>
+
+                {/* Data metrics that appear on hover */}
+                <div style={{
+                    display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'flex-end',
+                    opacity: isHovered ? 1 : 0, transition: 'opacity 0.4s ease',
+                    fontFamily: 'monospace', fontSize: '0.7rem', color: 'rgba(255,255,255,0.6)'
+                }}>
+                    <span>IMPACT: <span style={{ color: 'var(--accent)' }}>{impact}</span></span>
+                    <span>READ_TIME: <span style={{ color: '#fff' }}>{readTime}</span></span>
+                    <span>ACCESS: <span style={{ color: '#0f0' }}>GRANTED</span></span>
                 </div>
             </div>
-            {/* Dark overlay for contrast */}
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)', zIndex: 1 }}></div>
+
+            <div style={{ position: 'relative', zIndex: 2, transform: isHovered ? 'translateY(0)' : 'translateY(20px)', transition: 'transform 0.4s cubic-bezier(0.19, 1, 0.22, 1)' }}>
+                <h3 style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                    marginBottom: '1.5rem',
+                    color: '#fff',
+                    lineHeight: '1.2',
+                    textShadow: isHovered ? '0 0 15px rgba(227,24,45,0.3)' : 'none',
+                    transition: 'text-shadow 0.4s'
+                }}>
+                    {title}
+                </h3>
+
+                <div style={{
+                    height: isHovered ? '24px' : '0px',
+                    overflow: 'hidden',
+                    transition: 'height 0.4s cubic-bezier(0.19, 1, 0.22, 1)',
+                    display: 'flex', alignItems: 'center', gap: '1rem',
+                    color: 'var(--accent)', fontSize: '0.85rem', fontFamily: 'monospace'
+                }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+                        INITIATE DATA TRANSFER
+                    </span>
+                </div>
+            </div>
         </div>
     );
 };
@@ -632,59 +671,61 @@ export const Blog = () => {
             minHeight: '100vh',
             justifyContent: 'center',
             alignItems: 'center',
-            background: 'rgba(5, 5, 5, 0.8)',
-            backdropFilter: 'blur(40px)',
-            WebkitBackdropFilter: 'blur(40px)',
+            background: 'rgba(11, 11, 11, 0.7)',
+            backdropFilter: 'blur(30px)',
+            WebkitBackdropFilter: 'blur(30px)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
             position: 'relative',
             zIndex: 10,
             padding: '8rem 5% 6rem'
         }}>
-            <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '4rem' }}>
-                <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
-                    <h2 className="accent-text" style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', marginBottom: '1rem', lineHeight: '1' }}>
-                        INSIGHTS &<br />INNOVATIONS
-                    </h2>
-                    <p style={{ color: 'var(--subtext)', fontSize: '1.15rem', lineHeight: '1.6', marginTop: '1.5rem' }}>
-                        Explore the engineering philosophies, metallurgical advancements, and stories behind the massive infrastructures shaping the country.
-                    </p>
-                </div>
-
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-                    gap: '2.5rem',
-                    perspective: '1200px'
-                }}>
-                    <BlogFeatureCard
-                        category="Engineering"
-                        title="The Science Behind 500W TMT Rebars: A Deep Dive"
-                        readTime="6 min read"
-                        img="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&q=80&w=800"
-                        delay={0.1}
-                    />
-                    <BlogFeatureCard
-                        category="Sustainability"
-                        title="Achieving Net-Zero Emissions in Blast Furnace Operations"
-                        readTime="8 min read"
-                        img="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800"
-                        delay={0.3}
-                    />
-                </div>
-
-                <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                    <a href="#blog-archive" className="magnetic-btn" style={{ fontSize: '1rem', padding: '1.2rem 3rem' }}>
-                        BROWSE ALL ARTICLES
+            <div style={{ maxWidth: '1400px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '5rem' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '3rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '2rem' }}>
+                    <div style={{ textAlign: 'left', maxWidth: '800px' }}>
+                        <p style={{ fontFamily: 'monospace', color: 'var(--accent)', letterSpacing: '0.2em', marginBottom: '1rem', fontSize: '0.9rem' }}>// KNOWLEDGE_BASE_v2.0</p>
+                        <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5.5rem)', marginBottom: '1.5rem', lineHeight: '1', color: '#fff', textTransform: 'uppercase' }}>
+                            INSIGHTS &<br />INNOVATIONS
+                        </h2>
+                        <p style={{ color: 'var(--subtext)', fontSize: '1.15rem', lineHeight: '1.7', maxWidth: '600px' }}>
+                            Access our architectural database. Explore exact engineering philosophies, heavily researched metallurgical leaps, and the cold calculations behind mass infrastructure.
+                        </p>
+                    </div>
+                    <a href="#blog-archive" className="magnetic-btn" style={{ fontSize: '0.85rem', padding: '1.2rem 2.5rem', background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', letterSpacing: '0.1em' }}>
+                        ACCESS ALL FILES
                     </a>
                 </div>
-            </div>
 
-            {/* Inline CSS animation for fade in */}
-            <style jsx>{`
-                @keyframes fadeInUp {
-                    from { opacity: 0; transform: translateY(40px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-            `}</style>
+                {/* Dense Masonry Grid for the technical feel */}
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+                    gap: '1px',
+                    background: 'rgba(255,255,255,0.1)',
+                    border: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                    <DataMatrixCard
+                        category="Metallurgy"
+                        impact="CRITICAL"
+                        readTime="06_MIN"
+                        title="The Exact Science Behind 500W TMT Rebars: A Load-Bearing Analysis"
+                        img="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&q=80&w=800"
+                    />
+                    <DataMatrixCard
+                        category="Sustainability"
+                        impact="HIGH"
+                        readTime="08_MIN"
+                        title="Achieving Absolute Zero: Eliminating Emissions in Active Blast Furnaces"
+                        img="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800"
+                    />
+                    <DataMatrixCard
+                        category="Architecture"
+                        impact="MODERATE"
+                        readTime="04_MIN"
+                        title="Kinetic Flexibility: Engineering Skyscrapers for Maximum Seismic Resilience"
+                        img="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800"
+                    />
+                </div>
+            </div>
         </section>
     );
 };
