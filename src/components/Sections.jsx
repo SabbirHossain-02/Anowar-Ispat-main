@@ -214,7 +214,7 @@ export const BetterTomorrow = () => (
     </section>
 )
 
-const CareerHoverCard = ({ role, type, desc }) => {
+const ForgeCard = ({ role, type, desc }) => {
     const cardRef = useRef();
 
     const handleMouseMove = (e) => {
@@ -224,23 +224,37 @@ const CareerHoverCard = ({ role, type, desc }) => {
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
 
-        const multiplier = 15;
+        const multiplier = 10;
         const xRotate = multiplier * (y / (rect.height / 2));
         const yRotate = -multiplier * (x / (rect.width / 2));
 
-        card.style.transform = `perspective(800px) rotateX(${xRotate}deg) rotateY(${yRotate}deg) translateY(-10px)`;
+        card.style.transform = `perspective(1000px) rotateX(${xRotate}deg) rotateY(${yRotate}deg) scale(1.03)`;
         card.style.transition = 'none';
-        card.style.borderColor = 'rgba(227, 24, 45, 0.4)';
-        card.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(227, 24, 45, 0.1)';
+        card.style.background = 'linear-gradient(135deg, rgba(30,30,30,0.9), rgba(10,10,10,0.95))';
+        card.style.borderColor = 'rgba(255, 60, 0, 0.8)'; // Intense glowing orange/red
+        card.style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 60, 0, 0.3), inset 0 0 20px rgba(255, 60, 0, 0.1)';
+
+        const title = card.querySelector('.forge-title');
+        if (title) {
+            title.style.color = '#fff';
+            title.style.textShadow = '0 0 10px rgba(255, 100, 0, 0.8)';
+        }
     };
 
     const handleMouseLeave = () => {
         if (!cardRef.current) return;
         const card = cardRef.current;
-        card.style.transform = `perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
-        card.style.transition = 'all 0.5s ease';
-        card.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-        card.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+        card.style.transition = 'all 0.5s ease-out';
+        card.style.background = 'linear-gradient(135deg, rgba(20,20,20,0.8), rgba(5,5,5,0.95))';
+        card.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+        card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.8)';
+
+        const title = card.querySelector('.forge-title');
+        if (title) {
+            title.style.color = 'rgba(255,255,255,0.7)';
+            title.style.textShadow = 'none';
+        }
     };
 
     return (
@@ -249,25 +263,44 @@ const CareerHoverCard = ({ role, type, desc }) => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: '12px',
-                padding: '2rem',
+                background: 'linear-gradient(135deg, rgba(20,20,20,0.8), rgba(5,5,5,0.95))',
+                borderRadius: '8px',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                padding: '2.5rem',
                 cursor: 'pointer',
-                transition: 'all 0.5s ease',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
+                transition: 'all 0.5s ease-out',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.8)',
                 width: '100%',
                 willChange: 'transform',
-                transformStyle: 'preserve-3d'
+                position: 'relative',
+                overflow: 'hidden'
             }}
         >
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1rem', transform: 'translateZ(20px)' }}>
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', color: '#fff' }}>{role}</h3>
-                <span style={{ fontSize: '0.75rem', background: 'rgba(227, 24, 45, 0.1)', color: 'var(--accent)', padding: '0.3rem 0.8rem', borderRadius: '50px', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{type}</span>
+            {/* Subtle noise texture overlay */}
+            <div style={{
+                position: 'absolute', inset: 0,
+                backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+                opacity: 0.04, mixBlendMode: 'overlay', pointerEvents: 'none'
+            }}></div>
+
+            <div style={{ position: 'relative', zIndex: 2 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                    <h3 className="forge-title" style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', color: 'rgba(255,255,255,0.7)', transition: 'all 0.4s ease', margin: 0 }}>
+                        {role}
+                    </h3>
+                    <span style={{
+                        fontSize: '0.75rem',
+                        fontFamily: 'monospace',
+                        fontWeight: 'bold',
+                        color: 'var(--accent)',
+                        border: '1px solid rgba(227, 24, 45, 0.3)',
+                        padding: '0.3rem 0.8rem',
+                        letterSpacing: '0.1em',
+                        whiteSpace: 'nowrap'
+                    }}>{type}</span>
+                </div>
+                <p style={{ color: 'var(--subtext)', fontSize: '0.95rem', lineHeight: '1.7', margin: 0 }}>{desc}</p>
             </div>
-            <p style={{ color: 'var(--subtext)', fontSize: '0.9rem', lineHeight: '1.5', transform: 'translateZ(10px)' }}>{desc}</p>
         </div>
     );
 };
@@ -276,40 +309,61 @@ export const Career = () => (
     <section id="career" style={{
         minHeight: '100vh',
         justifyContent: 'center',
-        background: 'rgba(20, 20, 20, 0.6)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+        background: 'rgba(11, 11, 11, 0.7)',
+        backdropFilter: 'blur(30px)',
+        WebkitBackdropFilter: 'blur(30px)',
+        borderTop: '1px solid rgba(255, 60, 0, 0.1)',
+        borderBottom: '1px solid rgba(255, 60, 0, 0.1)',
         position: 'relative',
         zIndex: 10,
-        padding: '6rem 5%'
+        padding: '8rem 5%',
+        overflow: 'hidden'
     }}>
-        <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
+        {/* Ambient background glow */}
+        <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '80vw',
+            height: '80vh',
+            background: 'radial-gradient(circle, rgba(227, 24, 45, 0.05) 0%, transparent 60%)',
+            filter: 'blur(60px)',
+            pointerEvents: 'none',
+            zIndex: 1
+        }}></div>
+
+        <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '5rem', alignItems: 'center', position: 'relative', zIndex: 2 }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
-                <h2 className="accent-text" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '1rem' }}>FORGE YOUR CAREER</h2>
-                <p style={{ color: 'var(--subtext)', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '2rem', maxWidth: '500px' }}>
-                    Join the dynamic force shaping the structural skyline.
-                    We are constantly looking for sharp, driven, and resilient individuals to join our expanding engineering, metallurgical, and corporate teams.
+                <p style={{ fontFamily: 'monospace', color: 'var(--accent)', letterSpacing: '0.15em', marginBottom: '1rem', fontSize: '0.9rem', borderLeft: '2px solid var(--accent)', paddingLeft: '1rem' }}>
+                    JOIN THE FORGE
                 </p>
-                <a href="#apply" className="magnetic-btn" style={{ fontSize: '0.9rem', padding: '1rem 2rem', marginTop: '0' }}>ALL OPENINGS</a>
+                <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', marginBottom: '1.5rem', color: '#fff', lineHeight: 1, textTransform: 'uppercase' }}>
+                    IGNITE<br />YOUR<br />POTENTIAL
+                </h2>
+                <p style={{ color: 'var(--subtext)', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '2.5rem', maxWidth: '400px' }}>
+                    We are forging the structural backbone of tomorrow. We seek relentless individuals ready to operate at absolute peak intensity across our corporate and metallurgical divisions.
+                </p>
+                <a href="#apply" className="magnetic-btn" style={{ fontSize: '0.9rem', padding: '1rem 2.5rem', marginTop: '0', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    ENTER THE FORGE
+                </a>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', perspective: '1000px' }}>
-                <CareerHoverCard
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', perspective: '1200px' }}>
+                <ForgeCard
                     role="Metallurgical Engineer"
                     type="FULL-TIME"
-                    desc="Oversee our blast furnace operations, ensuring temperature and alloy compositions meet world-class industry benchmarks."
+                    desc="Oversee our blast furnace operations, ensuring temperature and alloy compositions meet world-class industry benchmarks directly on the production floor."
                 />
-                <CareerHoverCard
+                <ForgeCard
                     role="Structural QA Specialist"
                     type="CONTRACT"
-                    desc="Run extensive tensile and stress tests on the 500W TMT rebars directly off the mass production line."
+                    desc="Run extensive tensile and stress tests on the 500W TMT rebars. Demand perfection before any steel leaves our testing facility."
                 />
-                <CareerHoverCard
+                <ForgeCard
                     role="Supply Chain Director"
                     type="FULL-TIME"
-                    desc="Manage nation-wide logistics, coordinating heavy billet and rebars shipments to mega structural projects."
+                    desc="Manage nation-wide heavy logistics, coordinating the shipment of raw billets and forged rebars to monumental structural projects."
                 />
             </div>
         </div>
