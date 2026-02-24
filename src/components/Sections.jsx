@@ -539,133 +539,141 @@ export const MediaEvents = () => {
     );
 };
 
-const DataMatrixCard = ({ category, title, impact, readTime, img }) => {
-    const cardRef = useRef();
-    const [isHovered, setIsHovered] = useState(false);
+const InsightCarouselCard = ({ category, title, readTime, img, index, currentIndex }) => {
+    // Calculate relative position to active card
+    const isActive = index === currentIndex;
+    const isPrev = index === (currentIndex - 1 + 3) % 3;
+    const isNext = index === (currentIndex + 1) % 3;
 
-    const handleMouseMove = (e) => {
-        if (!cardRef.current) return;
-        const card = cardRef.current;
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+    let transform = 'translateX(0) translateZ(0) rotateY(0deg) scale(0.8)';
+    let opacity = 0;
+    let zIndex = 1;
+    let filter = 'grayscale(100%) blur(5px)';
 
-        const multiplier = 5;
-        const xRotate = multiplier * (y / (rect.height / 2));
-        const yRotate = -multiplier * (x / (rect.width / 2));
-
-        card.style.transform = `perspective(1000px) rotateX(${xRotate}deg) rotateY(${yRotate}deg) scale(1.02)`;
-        card.style.transition = 'none';
-        card.style.borderColor = 'rgba(227, 24, 45, 0.4)';
-        card.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(227, 24, 45, 0.1)';
-
-        const overlay = document.getElementById(`overlay-${title.replace(/\\s+/g, '')}`);
-        if (overlay) overlay.style.opacity = '0.9';
-    };
-
-    const handleMouseLeave = () => {
-        if (!cardRef.current) return;
-        const card = cardRef.current;
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
-        card.style.transition = 'all 0.4s ease-out';
-        card.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-        card.style.boxShadow = 'none';
-
-        const overlay = document.getElementById(`overlay-${title.replace(/\\s+/g, '')}`);
-        if (overlay) overlay.style.opacity = '0.5';
-        setIsHovered(false);
-    };
+    if (isActive) {
+        transform = 'translateX(0) translateZ(50px) rotateY(0deg) scale(1)';
+        opacity = 1;
+        zIndex = 10;
+        filter = 'grayscale(0%) blur(0px)';
+    } else if (isPrev) {
+        transform = 'translateX(-60%) translateZ(-100px) rotateY(25deg) scale(0.85)';
+        opacity = 0.5;
+        zIndex = 5;
+    } else if (isNext) {
+        transform = 'translateX(60%) translateZ(-100px) rotateY(-25deg) scale(0.85)';
+        opacity = 0.5;
+        zIndex = 5;
+    }
 
     return (
-        <div
-            ref={cardRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            onMouseEnter={() => setIsHovered(true)}
-            style={{
-                position: 'relative',
-                background: '#0B0B0B',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                minHeight: '420px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                cursor: 'crosshair',
-                transition: 'all 0.4s ease-out',
-                overflow: 'hidden',
-                padding: '2.5rem'
-            }}
-        >
-            {/* Background image with color burn for a technical feel */}
-            <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'grayscale(100%) contrast(120%) brightness(40%)', zIndex: 0 }}></div>
-
-            {/* Dark Matrix Overlay */}
-            <div id={`overlay-${title.replace(/\\s+/g, '')}`} style={{
-                position: 'absolute', inset: 0,
-                backgroundColor: 'rgba(11,11,11,0.5)',
-                backgroundImage: 'linear-gradient(rgba(227, 24, 45, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(227, 24, 45, 0.05) 1px, transparent 1px)',
-                backgroundSize: '20px 20px',
-                zIndex: 1, transition: 'opacity 0.4s ease'
-            }}></div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 2 }}>
+        <div style={{
+            position: 'absolute',
+            top: '10%',
+            left: 0,
+            right: 0,
+            margin: '0 auto',
+            width: '90%',
+            maxWidth: '600px',
+            height: '450px',
+            background: `linear-gradient(rgba(11, 11, 11, 0.4), rgba(11, 11, 11, 0.95)), url(${img}) center/cover`,
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: isActive ? '1px solid rgba(227, 24, 45, 0.5)' : '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '16px',
+            padding: '3rem',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+            transition: 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            transform,
+            opacity,
+            zIndex,
+            filter,
+            boxShadow: isActive ? '0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(227, 24, 45, 0.2)' : '0 10px 30px rgba(0,0,0,0.5)',
+            transformStyle: 'preserve-3d',
+            pointerEvents: isActive ? 'all' : 'none'
+        }}>
+            <div style={{ transform: 'translateZ(30px)', transition: 'transform 0.8s ease' }}>
                 <span style={{
                     display: 'inline-block',
-                    fontSize: '0.75rem',
                     fontFamily: 'monospace',
-                    color: isHovered ? '#fff' : 'var(--accent)',
-                    padding: '0.3rem 0',
-                    letterSpacing: '0.15em',
-                    borderBottom: '1px solid rgba(227,24,45,0.5)',
+                    fontSize: '0.8rem',
+                    color: isActive ? 'var(--accent)' : 'rgba(255,255,255,0.5)',
+                    letterSpacing: '0.2em',
+                    marginBottom: '1rem',
                     textTransform: 'uppercase',
-                    transition: 'all 0.4s ease'
+                    transition: 'all 0.5s ease'
                 }}>
-                    [ {category} ]
+                    // {category}
                 </span>
-
-                {/* Data metrics that appear on hover */}
-                <div style={{
-                    display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'flex-end',
-                    opacity: isHovered ? 1 : 0, transition: 'opacity 0.4s ease',
-                    fontFamily: 'monospace', fontSize: '0.7rem', color: 'rgba(255,255,255,0.6)'
-                }}>
-                    <span>IMPACT: <span style={{ color: 'var(--accent)' }}>{impact}</span></span>
-                    <span>READ_TIME: <span style={{ color: '#fff' }}>{readTime}</span></span>
-                    <span>ACCESS: <span style={{ color: '#0f0' }}>GRANTED</span></span>
-                </div>
-            </div>
-
-            <div style={{ position: 'relative', zIndex: 2, transform: isHovered ? 'translateY(0)' : 'translateY(20px)', transition: 'transform 0.4s cubic-bezier(0.19, 1, 0.22, 1)' }}>
                 <h3 style={{
                     fontFamily: 'var(--font-heading)',
-                    fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                    fontSize: ' clamp(1.5rem, 3vw, 2.2rem)',
                     marginBottom: '1.5rem',
                     color: '#fff',
                     lineHeight: '1.2',
-                    textShadow: isHovered ? '0 0 15px rgba(227,24,45,0.3)' : 'none',
-                    transition: 'text-shadow 0.4s'
+                    textShadow: '0 4px 20px rgba(0,0,0,0.8)'
                 }}>
                     {title}
                 </h3>
 
                 <div style={{
-                    height: isHovered ? '24px' : '0px',
-                    overflow: 'hidden',
-                    transition: 'height 0.4s cubic-bezier(0.19, 1, 0.22, 1)',
-                    display: 'flex', alignItems: 'center', gap: '1rem',
-                    color: 'var(--accent)', fontSize: '0.85rem', fontFamily: 'monospace'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1.5rem',
+                    opacity: isActive ? 1 : 0,
+                    transform: isActive ? 'translateY(0)' : 'translateY(20px)',
+                    transition: 'all 0.5s ease 0.2s',
+                    borderTop: '1px solid rgba(255,255,255,0.1)',
+                    paddingTop: '1.5rem'
                 }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
-                        INITIATE DATA TRANSFER
+                    <span style={{ fontFamily: 'monospace', color: 'var(--subtext)', fontSize: '0.85rem' }}>
+                        TIME: {readTime}
                     </span>
+                    <a href="#read" className="magnetic-btn" style={{
+                        margin: 0,
+                        padding: '0.8rem 1.5rem',
+                        fontSize: '0.8rem',
+                        borderRadius: '4px',
+                        background: 'transparent',
+                        border: '1px solid var(--accent)',
+                        color: 'var(--accent)'
+                    }}>INITIATE FEED</a>
                 </div>
             </div>
+            {/* Ambient inner glow for active card */}
+            {isActive && <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at top right, rgba(227, 24, 45, 0.1), transparent 60%)', pointerEvents: 'none', borderRadius: '16px' }}></div>}
         </div>
     );
 };
 
 export const Blog = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const insights = [
+        {
+            category: "Engineering Analysis",
+            title: "The Physics of 500W: Tension, Yield, and Structural Absolute",
+            readTime: "06:00 MIN",
+            img: "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&q=80&w=800"
+        },
+        {
+            category: "Sustainable Future",
+            title: "Achieving Net-Zero: Algorithms Controlling Carbon Outputs",
+            readTime: "08:30 MIN",
+            img: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800"
+        },
+        {
+            category: "Project Architectural",
+            title: "Bridging the Divide: Logistics of Mega-Ton Deliveries",
+            readTime: "04:45 MIN",
+            img: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=800"
+        }
+    ];
+
+    const handleNext = () => setCurrentIndex((prev) => (prev + 1) % insights.length);
+    const handlePrev = () => setCurrentIndex((prev) => (prev - 1 + insights.length) % insights.length);
+
     return (
         <section id="blog" style={{
             minHeight: '100vh',
@@ -674,58 +682,94 @@ export const Blog = () => {
             background: 'rgba(11, 11, 11, 0.7)',
             backdropFilter: 'blur(30px)',
             WebkitBackdropFilter: 'blur(30px)',
-            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
             position: 'relative',
             zIndex: 10,
-            padding: '8rem 5% 6rem'
+            padding: '8rem 0', // Removed horizontal padding to let carousel bleed
+            overflow: 'hidden'
         }}>
-            <div style={{ maxWidth: '1400px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '5rem' }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '3rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '2rem' }}>
-                    <div style={{ textAlign: 'left', maxWidth: '800px' }}>
-                        <p style={{ fontFamily: 'monospace', color: 'var(--accent)', letterSpacing: '0.2em', marginBottom: '1rem', fontSize: '0.9rem' }}>// KNOWLEDGE_BASE_v2.0</p>
-                        <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5.5rem)', marginBottom: '1.5rem', lineHeight: '1', color: '#fff', textTransform: 'uppercase' }}>
-                            INSIGHTS &<br />INNOVATIONS
-                        </h2>
-                        <p style={{ color: 'var(--subtext)', fontSize: '1.15rem', lineHeight: '1.7', maxWidth: '600px' }}>
-                            Access our architectural database. Explore exact engineering philosophies, heavily researched metallurgical leaps, and the cold calculations behind mass infrastructure.
-                        </p>
-                    </div>
-                    <a href="#blog-archive" className="magnetic-btn" style={{ fontSize: '0.85rem', padding: '1.2rem 2.5rem', background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', letterSpacing: '0.1em' }}>
-                        ACCESS ALL FILES
-                    </a>
-                </div>
 
-                {/* Dense Masonry Grid for the technical feel */}
+            {/* Minimalist Header */}
+            <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 4rem auto', position: 'relative', zIndex: 20, padding: '0 5%' }}>
+                <p style={{ fontFamily: 'monospace', color: 'var(--subtext)', letterSpacing: '0.2em', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                    [ SYSTEM.ARCHIVES.OPEN ]
+                </p>
+                <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', color: '#fff', lineHeight: '1.1', textTransform: 'uppercase', marginBottom: '1.5rem' }}>
+                    INSIGHTS &<br />INNOVATIONS
+                </h2>
+            </div>
+
+            {/* 3D Carousel Container */}
+            <div style={{
+                position: 'relative',
+                height: '550px',
+                width: '100%',
+                perspective: '1500px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                {insights.map((insight, idx) => (
+                    <InsightCarouselCard
+                        key={idx}
+                        index={idx}
+                        currentIndex={currentIndex}
+                        {...insight}
+                    />
+                ))}
+
+                {/* Carousel Controls */}
                 <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-                    gap: '1px',
-                    background: 'rgba(255,255,255,0.1)',
-                    border: '1px solid rgba(255,255,255,0.1)'
+                    position: 'absolute',
+                    bottom: '0',
+                    display: 'flex',
+                    gap: '2rem',
+                    zIndex: 30
                 }}>
-                    <DataMatrixCard
-                        category="Metallurgy"
-                        impact="CRITICAL"
-                        readTime="06_MIN"
-                        title="The Exact Science Behind 500W TMT Rebars: A Load-Bearing Analysis"
-                        img="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&q=80&w=800"
-                    />
-                    <DataMatrixCard
-                        category="Sustainability"
-                        impact="HIGH"
-                        readTime="08_MIN"
-                        title="Achieving Absolute Zero: Eliminating Emissions in Active Blast Furnaces"
-                        img="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800"
-                    />
-                    <DataMatrixCard
-                        category="Architecture"
-                        impact="MODERATE"
-                        readTime="04_MIN"
-                        title="Kinetic Flexibility: Engineering Skyscrapers for Maximum Seismic Resilience"
-                        img="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800"
-                    />
+                    <button
+                        onClick={handlePrev}
+                        style={{
+                            background: 'transparent',
+                            border: '1px solid rgba(255,255,255,0.2)',
+                            color: '#fff',
+                            width: '50px',
+                            height: '50px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                        }}
+                        onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = '#fff'; }}
+                    >
+                        &larr;
+                    </button>
+                    <button
+                        onClick={handleNext}
+                        style={{
+                            background: 'transparent',
+                            border: '1px solid rgba(255,255,255,0.2)',
+                            color: '#fff',
+                            width: '50px',
+                            height: '50px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                        }}
+                        onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = '#fff'; }}
+                    >
+                        &rarr;
+                    </button>
                 </div>
             </div>
+
+            {/* Heavy Vignette to blend into section below */}
+            <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '20vh', background: 'linear-gradient(to top, rgba(11,11,11,0.95), transparent)', pointerEvents: 'none', zIndex: 11 }}></div>
         </section>
     );
 };
