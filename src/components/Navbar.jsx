@@ -1,10 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, X } from 'lucide-react';
+import { Search, Menu, X, Sun, Moon } from 'lucide-react';
 
 const Navbar = ({ onOpenContact }) => {
     const [scrolled, setScrolled] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isLightMode, setIsLightMode] = useState(false);
+
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('themeMode');
+        if (savedTheme === 'light') {
+            setIsLightMode(true);
+            document.body.classList.add('light-mode');
+        }
+    }, []);
+
+    const toggleTheme = () => {
+        const newMode = !isLightMode;
+        setIsLightMode(newMode);
+        document.body.classList.toggle('light-mode', newMode);
+        localStorage.setItem('themeMode', newMode ? 'light' : 'dark');
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -63,6 +79,14 @@ const Navbar = ({ onOpenContact }) => {
 
                     {/* Right Side Tools */}
                     <div className="nav-tools">
+                        <button
+                            className="icon-btn"
+                            onClick={toggleTheme}
+                            aria-label="Toggle Theme"
+                        >
+                            {isLightMode ? <Moon size={20} /> : <Sun size={20} />}
+                        </button>
+
                         <div className={`search-container ${searchOpen ? 'open' : ''}`}>
                             <button
                                 className="icon-btn"

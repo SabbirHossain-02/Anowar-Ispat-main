@@ -723,6 +723,174 @@ section {
     padding-left: 0;
     margin-top: 2rem;
     border-top: 1px solid var(--accent);
-    padding-top: 2rem;
   }
+}
+
+/* --- LIGHT MODE CORE OVERRIDES --- */
+body.light-mode {
+  --primary: #F2F2F5;
+  --secondary: #E5E5EA;
+  --accent: #E3182D;
+  --text: #1A1A1A;
+  --subtext: #5A5A5C;
+  --glass: rgba(0, 0, 0, 0.05);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --bg-section: rgba(245, 245, 247, 0.85);
+  --bg-radial-overlay: radial-gradient(circle at center, transparent 0%, rgba(245, 245, 247, 0.95) 80%);
+  --career-glow: radial-gradient(circle, rgba(227, 24, 45, 0.1) 0%, transparent 60%);
+  --mask-top: linear-gradient(to bottom, rgba(245, 245, 247, 1), transparent);
+  --mask-bottom: linear-gradient(to top, rgba(245, 245, 247, 1), transparent);
+  --insight-overlay-1: rgba(245, 245, 247, 0.6);
+  --insight-overlay-2: rgba(245, 245, 247, 0.98);
+  --vignette-bottom: linear-gradient(to top, rgba(245, 245, 247, 0.95), transparent);
+  background-color: var(--primary);
+  color: var(--text);
+}
+
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h4,
+body.light-mode .forge-title,
+body.light-mode .hero-title,
+body.light-mode .video-hero-title,
+body.light-mode .carousel-title,
+body.light-mode .carousel-desc {
+  color: var(--text) !important;
+  text-shadow: none !important;
+}
+
+body.light-mode .video-overlay {
+  background: linear-gradient(to bottom, rgba(242, 242, 245, 0.3) 0%, rgba(242, 242, 245, 0.9) 100%) !important;
+}
+
+body.light-mode section#media-events {
+  background: var(--bg-section) !important;
+}
+
+body.light-mode .carousel-card,
+body.light-mode .forge-card {
+  background: #ffffff !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-mode .carousel-img {
+  background-color: #fff !important;
+  border-bottom-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-mode [style*="color: #fff"],
+body.light-mode [style*="color: rgb(255, 255, 255)"],
+body.light-mode p[style*="color: #fff"] {
+  color: #1A1A1A !important;
+}
+
+body.light-mode [style*="color: rgba(255, 255, 255, 0.7)"],
+body.light-mode [style*="color: rgba(255,255,255,0.7)"],
+body.light-mode [style*="color: rgba(255, 255, 255, 0.5)"],
+body.light-mode [style*="color: rgba(255,255,255,0.5)"],
+body.light-mode [style*="color: rgba(255, 255, 255, 0.8)"],
+body.light-mode [style*="color: rgba(255,255,255,0.8)"] {
+  color: var(--subtext) !important;
+}
+
+body.light-mode [style*="border-bottom: 1px solid rgba(255, 255, 255, 0.1)"],
+body.light-mode [style*="border-bottom: 1px solid rgba(255,255,255,0.1)"] {
+  border-bottom-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-mode [style*="border-top: 1px solid rgba(255, 255, 255, 0.05)"],
+body.light-mode [style*="border-top: 1px solid rgba(255,255,255,0.05)"] {
+  border-top-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+body.light-mode [style*="background: rgba(42, 42, 42, 0.2)"] {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+body.light-mode .navbar {
+  background: transparent !important;
+}
+
+body.light-mode .navbar.nav-scrolled {
+  background: rgba(242, 242, 245, 0.8) !important;
+  border-bottom: 1px solid rgba(227, 24, 45, 0.1) !important;
+}
+
+body.light-mode .nav-link,
+body.light-mode .nav-logo a,
+body.light-mode .icon-btn {
+  color: var(--text) !important;
+}
+
+body.light-mode .search-input {
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--accent) !important;
+}
+
+body.light-mode .search-input::placeholder {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+
+body.light-mode .mobile-menu {
+  background: var(--primary) !important;
+}
+
+body.light-mode .mobile-link {
+  color: var(--text) !important;
+}
+
+body.light-mode .contact-modal {
+  color: var(--text) !important;
+}
+
+body.light-mode .contact-grid {
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
+body.light-mode .input-group input,
+body.light-mode .input-group textarea {
+  color: var(--text) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+body.light-mode .input-group input:focus,
+body.light-mode .input-group textarea:focus {
+  background: rgba(227, 24, 45, 0.05) !important;
+}
+
+body.light-mode .command-submit-btn {
+  color: var(--text) !important;
+  border-color: var(--accent) !important;
+}
+
+body.light-mode div[style*="linear-gradient(135deg, rgba(20,20,20,0.8), rgba(5,5,5,0.95))"] {
+  background: linear-gradient(135deg, #ffffff, #f9f9f9) !important;
+}
+
+body.light-mode div[style*="border-left: 4px solid rgba(255, 255, 255, 0.1)"] {
+  border-left-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-mode div[style*="background: rgba(255, 255, 255, 0.02)"] {
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+
+body.light-mode div[style*="border: 1px solid rgba(255, 255, 255, 0.05)"] {
+  border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+body.light-mode button[style*="border: 1px solid rgba(255,255,255,0.2)"] {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+  color: var(--text) !important;
+}
+
+body.light-mode button[style*="border: 1px solid rgba(255,255,255,0.2)"]:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+body.light-mode img[alt="Anwar Ispat Logo"] {
+  content: url('/logo-dark.png');
+  filter: none !important;
 }

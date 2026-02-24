@@ -155,7 +155,7 @@ export const BetterTomorrow = () => (
         minHeight: '100vh',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'rgba(11, 11, 11, 0.7)',
+        background: 'var(--bg-section, rgba(11, 11, 11, 0.7))',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
         backgroundImage: `
@@ -175,7 +175,7 @@ export const BetterTomorrow = () => (
             left: 0,
             width: '100%',
             height: '100%',
-            background: 'radial-gradient(circle at center, transparent 0%, rgba(11,11,11,0.95) 80%)',
+            background: 'var(--bg-radial-overlay, radial-gradient(circle at center, transparent 0%, rgba(11,11,11,0.95) 80%))',
             pointerEvents: 'none',
             zIndex: 1
         }}></div>
@@ -309,7 +309,7 @@ export const Career = () => (
     <section id="career" style={{
         minHeight: '100vh',
         justifyContent: 'center',
-        background: 'rgba(11, 11, 11, 0.7)',
+        background: 'var(--bg-section, rgba(11, 11, 11, 0.7))',
         backdropFilter: 'blur(30px)',
         WebkitBackdropFilter: 'blur(30px)',
         borderTop: '1px solid rgba(255, 60, 0, 0.1)',
@@ -327,7 +327,7 @@ export const Career = () => (
             transform: 'translate(-50%, -50%)',
             width: '80vw',
             height: '80vh',
-            background: 'radial-gradient(circle, rgba(227, 24, 45, 0.05) 0%, transparent 60%)',
+            background: 'var(--career-glow, radial-gradient(circle, rgba(227, 24, 45, 0.05) 0%, transparent 60%))',
             filter: 'blur(60px)',
             pointerEvents: 'none',
             zIndex: 1
@@ -502,8 +502,8 @@ export const MediaEvents = () => {
                     alignItems: 'center'
                 }}>
                     {/* Top and bottom fade masks for the scrolling effect */}
-                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '150px', background: 'linear-gradient(to bottom, rgba(11,11,11,1), transparent)', zIndex: 5, pointerEvents: 'none' }}></div>
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '150px', background: 'linear-gradient(to top, rgba(11,11,11,1), transparent)', zIndex: 5, pointerEvents: 'none' }}></div>
+                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '150px', background: 'var(--mask-top, linear-gradient(to bottom, rgba(11,11,11,1), transparent))', zIndex: 5, pointerEvents: 'none' }}></div>
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '150px', background: 'var(--mask-bottom, linear-gradient(to top, rgba(11,11,11,1), transparent))', zIndex: 5, pointerEvents: 'none' }}></div>
 
                     <div
                         className="broadcast-marquee"
@@ -575,7 +575,7 @@ const InsightCarouselCard = ({ category, title, readTime, img, index, currentInd
             width: '90%',
             maxWidth: '600px',
             height: '450px',
-            background: `linear-gradient(rgba(11, 11, 11, 0.4), rgba(11, 11, 11, 0.95)), url(${img}) center/cover`,
+            background: `linear-gradient(var(--insight-overlay-1, rgba(11, 11, 11, 0.4)), var(--insight-overlay-2, rgba(11, 11, 11, 0.95))), url(${img}) center/cover`,
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             border: isActive ? '1px solid rgba(227, 24, 45, 0.5)' : '1px solid rgba(255, 255, 255, 0.1)',
@@ -679,7 +679,7 @@ export const Blog = () => {
             minHeight: '100vh',
             justifyContent: 'center',
             alignItems: 'center',
-            background: 'rgba(11, 11, 11, 0.7)',
+            background: 'var(--bg-section, rgba(11, 11, 11, 0.7))',
             backdropFilter: 'blur(30px)',
             WebkitBackdropFilter: 'blur(30px)',
             position: 'relative',
@@ -769,7 +769,7 @@ export const Blog = () => {
             </div>
 
             {/* Heavy Vignette to blend into section below */}
-            <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '20vh', background: 'linear-gradient(to top, rgba(11,11,11,0.95), transparent)', pointerEvents: 'none', zIndex: 11 }}></div>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '20vh', background: 'var(--vignette-bottom, linear-gradient(to top, rgba(11,11,11,0.95), transparent))', pointerEvents: 'none', zIndex: 11 }}></div>
         </section>
     );
 };
