@@ -548,8 +548,8 @@ export const Footer = ({ onOpenContact }) => (
         zIndex: 10
     }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '2rem', marginBottom: '4rem' }}>
-            <div style={{ flex: '1 1 300px' }}>
-                <img src="/Logo.png" alt="Anwar Ispat Logo" style={{ height: '40px', objectFit: 'contain', marginBottom: '1.5rem', filter: 'grayscale(100%) brightness(200%)' }} />
+            <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <img src="/Logo.png" alt="Anwar Ispat Logo" style={{ height: 'clamp(50px, 8vw, 80px)', objectFit: 'contain', objectPosition: 'left', marginBottom: '1.5rem', filter: 'grayscale(100%) brightness(200%)' }} />
                 <p style={{ color: 'var(--subtext)', fontSize: '0.9rem', lineHeight: '1.6', maxWidth: '300px' }}>
                     Unrelenting strength. Uncompromising quality. The structural backbone of tomorrow's infrastructure.
                 </p>

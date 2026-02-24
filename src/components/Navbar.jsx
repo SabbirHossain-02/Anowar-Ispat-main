@@ -43,7 +43,7 @@ const Navbar = ({ onOpenContact }) => {
                     {/* Logo */}
                     <div className="nav-logo">
                         <a href="#">
-                            <img src="/Logo.png" alt="Anwar Ispat Logo" style={{ height: 'clamp(60px, 8vw, 90px)', objectFit: 'contain' }} />
+                            <img src="/Logo.png" alt="Anwar Ispat Logo" style={{ height: 'clamp(30px, 5vw, 50px)', objectFit: 'contain' }} />
                         </a>
                     </div>
 

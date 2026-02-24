@@ -20,8 +20,8 @@ const VideoHero = () => {
                     src="/Logo.png"
                     alt="Anwar Ispat Logo"
                     style={{
-                        marginBottom: '2.5rem',
-                        height: 'clamp(100px, 25vh, 200px)',
+                        marginBottom: '2rem',
+                        height: 'clamp(50px, 12vh, 100px)',
                         objectFit: 'contain',
                         filter: 'drop-shadow(0 0 35px rgba(227, 24, 45, 0.8))'
                     }}
