@@ -79,65 +79,72 @@ export const ProductService = () => {
     );
 };
 
-const TiltCard = ({ title, desc, icon }) => {
-    const cardRef = useRef();
-
-    const handleMouseMove = (e) => {
-        if (!cardRef.current) return;
-        const card = cardRef.current;
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-
-        const multiplier = 20; // max rotation degrees
-        const xRotate = multiplier * (y / (rect.height / 2));
-        const yRotate = -multiplier * (x / (rect.width / 2));
-
-        card.style.transform = `perspective(1000px) rotateX(${xRotate}deg) rotateY(${yRotate}deg) scale(1.05)`;
-        card.style.transition = 'none';
-        card.style.zIndex = 10;
-        card.style.borderColor = 'rgba(227, 24, 45, 0.5)';
-        card.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(227, 24, 45, 0.2)';
-    };
-
-    const handleMouseLeave = () => {
-        if (!cardRef.current) return;
-        const card = cardRef.current;
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
-        card.style.transition = 'all 0.5s ease';
-        card.style.zIndex = 1;
-        card.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-        card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
-    };
+const BlueprintRow = ({ number, title, desc, specs }) => {
+    const [isHovered, setIsHovered] = useState(false);
 
     return (
         <div
-            ref={cardRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: '16px',
-                padding: '2.5rem',
-                flex: '1 1 250px',
-                minHeight: '300px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'flex-start',
-                cursor: 'default',
-                transition: 'all 0.5s ease',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
-                transformStyle: 'preserve-3d'
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                padding: '2rem 1rem',
+                cursor: 'crosshair',
+                transition: 'all 0.4s ease',
+                position: 'relative',
+                background: isHovered ? 'rgba(227, 24, 45, 0.05)' : 'transparent'
             }}
         >
-            <div style={{ transform: 'translateZ(30px)' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '1.5rem', color: 'var(--accent)' }}>{icon}</div>
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', marginBottom: '1rem', color: '#fff' }}>{title}</h3>
-                <p style={{ color: 'var(--subtext)', lineHeight: '1.6', fontSize: '0.95rem' }}>{desc}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', flexWrap: 'wrap' }}>
+                <span style={{
+                    fontFamily: 'monospace',
+                    color: isHovered ? 'var(--accent)' : 'var(--subtext)',
+                    fontSize: '1.2rem',
+                    transition: 'color 0.4s ease'
+                }}>
+                    [{number}]
+                </span>
+                <h3 style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                    color: isHovered ? '#fff' : 'rgba(255,255,255,0.7)',
+                    transition: 'color 0.4s ease',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    margin: 0
+                }}>{title}</h3>
+                <div style={{ flex: 1, minWidth: '20px' }}></div>
+                <span style={{
+                    color: isHovered ? 'var(--accent)' : 'var(--subtext)',
+                    fontFamily: 'monospace',
+                    fontSize: '0.9rem',
+                    transition: 'all 0.4s ease',
+                    opacity: isHovered ? 1 : 0.5
+                }}>
+                    {isHovered ? 'EXPANDED' : 'HOVER TO EXPAND +'}
+                </span>
+            </div>
+
+            <div style={{
+                maxHeight: isHovered ? '400px' : '0px',
+                overflow: 'hidden',
+                transition: 'max-height 0.6s cubic-bezier(0.19, 1, 0.22, 1)',
+                paddingLeft: '3.5rem'
+            }}>
+                <div style={{ paddingTop: '1.5rem', display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
+                    <p style={{ color: 'var(--subtext)', flex: '1 1 400px', lineHeight: '1.8', fontSize: '1.05rem', margin: 0 }}>
+                        {desc}
+                    </p>
+                    <div style={{ flex: '1 1 200px', borderLeft: '1px solid rgba(227, 24, 45, 0.3)', paddingLeft: '1.5rem' }}>
+                        <ul style={{ listStyle: 'none', color: '#fff', fontSize: '0.85rem', lineHeight: '2.5', fontFamily: 'monospace' }}>
+                            {specs.map((spec, i) => (
+                                <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <span style={{ color: 'var(--accent)' }}>▹</span> {spec}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     );
@@ -151,41 +158,56 @@ export const BetterTomorrow = () => (
         background: 'rgba(11, 11, 11, 0.7)',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
+        backgroundImage: `
+            linear-gradient(rgba(227, 24, 45, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(227, 24, 45, 0.03) 1px, transparent 1px)
+        `,
+        backgroundSize: '40px 40px',
         borderTop: '1px solid rgba(255, 255, 255, 0.05)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
         position: 'relative',
         zIndex: 10,
-        padding: '6rem 5%'
+        padding: '8rem 5%'
     }}>
-        <div style={{ width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', gap: '4rem' }}>
-            <div style={{ textAlign: 'center' }}>
-                <h2 className="accent-text" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '1rem' }}>A BETTER TOMORROW</h2>
-                <p style={{ color: 'var(--subtext)', maxWidth: '700px', margin: '0 auto', fontSize: '1.2rem', lineHeight: '1.6' }}>
-                    Building Bangladesh is more than just manufacturing steel. It's about engineering a sustainable foundation for the generations to come. We forge resilience to empower mega infrastructure.
+        <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'radial-gradient(circle at center, transparent 0%, rgba(11,11,11,0.95) 80%)',
+            pointerEvents: 'none',
+            zIndex: 1
+        }}></div>
+
+        <div style={{ width: '100%', maxWidth: '1000px', display: 'flex', flexDirection: 'column', gap: '4rem', position: 'relative', zIndex: 2 }}>
+            <div style={{ textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '2.5rem' }}>
+                <p style={{ fontFamily: 'monospace', color: 'var(--accent)', letterSpacing: '0.2em', marginBottom: '1rem', fontSize: '0.9rem' }}>// INIT_SEQUENCE: SUSTAINABILITY</p>
+                <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', marginBottom: '1.5rem', color: '#fff', lineHeight: 1.1 }}>A BETTER TOMORROW</h2>
+                <p style={{ color: 'var(--subtext)', maxWidth: '700px', fontSize: '1.15rem', lineHeight: '1.6' }}>
+                    Building Bangladesh is an exact science.
+                    We engineer resilience to empower mega infrastructure, high-rises, and iconic structural marvels across the nation.
                 </p>
             </div>
 
-            <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '2rem',
-                justifyContent: 'center',
-                perspective: '1000px'
-            }}>
-                <TiltCard
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <BlueprintRow
+                    number="01"
                     title="Sustainable Core"
-                    desc="We utilize advanced emission-control technology in our blast furnaces to drastically reduce our carbon footprint."
-                    icon="🌱"
+                    desc="We utilize advanced emission-control technology in our blast furnaces. The chemical composition is strictly monitored to drastically reduce our carbon footprint while simultaneously increasing tensile efficiency."
+                    specs={['EMISSION: -40%', 'YIELD: 500W', 'TEMP: 1600°C', 'STATUS: OPTIMAL']}
                 />
-                <TiltCard
+                <BlueprintRow
+                    number="02"
                     title="Seismic Resilience"
-                    desc="Our 500W TMT rebars are engineered to flex without breaking, ensuring high-rises withstand extreme seismic activity."
-                    icon="🏢"
+                    desc="Our 500W TMT rebars undergo rigorous cyclic loading tests. They are specifically engineered to flex and absorb kinetic energy, ensuring high-rises withstand extreme seismic activity."
+                    specs={['FLEXURAL_STRENGTH: HIGH', 'BENDABILITY: OPTIMAL', 'DUCTILITY: SUPERIOR', 'TEST: PASSED']}
                 />
-                <TiltCard
+                <BlueprintRow
+                    number="03"
                     title="Economic Foundation"
-                    desc="By producing premium steel locally, we are proud to be the structural and economic backbone of national mega-projects."
-                    icon="🌉"
+                    desc="By producing super-grade steel locally, we reduce import dependency. We are proud to act as the structural and economic backbone of national mega-projects serving millions daily."
+                    specs={['LOCAL_PROD: 100%', 'SCALE: MASSIVE', 'IMPACT: NATIONAL', 'GROWTH: POSITIVE']}
                 />
             </div>
         </div>
