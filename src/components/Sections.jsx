@@ -370,99 +370,174 @@ export const Career = () => (
     </section>
 )
 
-const MediaHoverCard = ({ date, title, desc, img }) => {
+const BroadcastCard = ({ date, title, desc, img, isHovering, onHover }) => {
     return (
         <div
+            onMouseEnter={() => onHover(true)}
+            onMouseLeave={() => onHover(false)}
             style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                cursor: 'pointer',
-                transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
                 display: 'flex',
-                flexDirection: 'column',
-                transformStyle: 'preserve-3d'
+                background: 'rgba(255, 255, 255, 0.02)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                borderLeft: '4px solid rgba(255, 255, 255, 0.1)',
+                padding: '1.5rem',
+                minWidth: '400px',
+                height: '140px',
+                width: '100%',
+                cursor: 'pointer',
+                transition: 'all 0.4s cubic-bezier(0.19, 1, 0.22, 1)',
+                transform: 'translateZ(0)',
+                willChange: 'transform, border-color, box-shadow',
+                position: 'relative',
+                overflow: 'hidden'
             }}
-            onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-15px) scale(1.02)';
-                e.currentTarget.style.borderColor = 'rgba(227, 24, 45, 0.5)';
-                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(227, 24, 45, 0.15)';
-                e.currentTarget.querySelector('.media-img').style.transform = 'scale(1.1)';
+            onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05) translateZ(20px)';
+                e.currentTarget.style.borderLeftColor = 'var(--accent)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                e.currentTarget.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(227, 24, 45, 0.1)';
             }}
-            onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
-                e.currentTarget.querySelector('.media-img').style.transform = 'scale(1)';
+            onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'scale(1) translateZ(0)';
+                e.currentTarget.style.borderLeftColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                e.currentTarget.style.boxShadow = 'none';
             }}
         >
-            <div style={{ width: '100%', height: '220px', overflow: 'hidden' }}>
-                <img className="media-img" src={img} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.8s ease' }} />
+            <div style={{ flex: '0 0 100px', height: '100%', marginRight: '1.5rem', overflow: 'hidden', borderRadius: '4px' }}>
+                <img src={img} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(0.8)', transition: 'filter 0.4s' }}
+                    onMouseOver={(e) => e.currentTarget.style.filter = 'grayscale(0)'}
+                    onMouseOut={(e) => e.currentTarget.style.filter = 'grayscale(0.8)'}
+                />
             </div>
-            <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1, position: 'relative' }}>
-                <p style={{ fontSize: '0.8rem', color: 'var(--accent)', marginBottom: '0.8rem', fontWeight: '700', letterSpacing: '0.1em' }}>{date}</p>
-                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', marginBottom: '1rem', color: '#fff', lineHeight: '1.3' }}>{title}</h4>
-                <p style={{ fontSize: '0.9rem', color: 'var(--subtext)', lineHeight: '1.6', marginTop: 'auto' }}>{desc}</p>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
+                <p style={{ fontSize: '0.75rem', color: 'var(--accent)', marginBottom: '0.5rem', fontFamily: 'monospace', letterSpacing: '0.1em' }}><span style={{ display: 'inline-block', width: '6px', height: '6px', background: 'var(--accent)', borderRadius: '50%', marginRight: '5px', animation: 'blink 2s infinite' }}></span> {date}</p>
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', marginBottom: '0.5rem', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--subtext)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{desc}</p>
             </div>
+
+            <style jsx>{`
+                @keyframes blink {
+                    0% { opacity: 1; }
+                    50% { opacity: 0.3; }
+                    100% { opacity: 1; }
+                }
+            `}</style>
         </div>
     );
 };
 
-export const MediaEvents = () => (
-    <section id="media-events" style={{
-        minHeight: '100vh',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: 'rgba(11, 11, 11, 0.85)',
-        backdropFilter: 'blur(30px)',
-        WebkitBackdropFilter: 'blur(30px)',
-        position: 'relative',
-        zIndex: 10,
-        padding: '6rem 5%'
-    }}>
-        <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '4rem' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2rem' }}>
-                <div style={{ textAlign: 'left', maxWidth: '600px' }}>
-                    <h2 className="accent-text" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '1rem' }}>MEDIA & EVENTS</h2>
-                    <p style={{ color: 'var(--subtext)', fontSize: '1.1rem', lineHeight: '1.6' }}>
-                        Stay updated with our latest milestones, announcements, and structural innovations. We continually redefine industry standards across the nation.
+export const MediaEvents = () => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    // Duplicate data to create a seamless loop
+    const broadcastData = [
+        {
+            date: "24 FEB 2026 - LIVE",
+            title: "Unveiling New High-Grade Steel Standard",
+            desc: "Setting unprecedented structural benchmarks with 500W TMT.",
+            img: "https://images.unsplash.com/photo-1541888053158-b6fe071d3714?auto=format&fit=crop&q=80&w=600"
+        },
+        {
+            date: "15 JAN 2026 - ARCHIVE",
+            title: "Annual Dealers Synergy Meet 2026",
+            desc: "A grand gathering of our finest national partners.",
+            img: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=600"
+        },
+        {
+            date: "05 DEC 2025 - INTL",
+            title: "Green Factory Certification Awarded",
+            desc: "Recognized for commitment to reducing carbon footprints.",
+            img: "https://images.unsplash.com/photo-1520699918507-3c3e05c46b0c?auto=format&fit=crop&q=80&w=600"
+        },
+        {
+            date: "12 NOV 2025 - LOCAL",
+            title: "Mega-Bridge Foundations Secured",
+            desc: "Anwar Ispat selected as primary supplier for the central bridge project.",
+            img: "https://images.unsplash.com/photo-1545532594-918cecebb08b?auto=format&fit=crop&q=80&w=600"
+        }
+    ];
+
+    return (
+        <section id="media-events" style={{
+            minHeight: '100vh',
+            justifyContent: 'center',
+            alignItems: 'center',
+            background: 'rgba(11, 11, 11, 0.7)',
+            backdropFilter: 'blur(30px)',
+            WebkitBackdropFilter: 'blur(30px)',
+            position: 'relative',
+            zIndex: 10,
+            overflow: 'hidden',
+            padding: '4rem 5%'
+        }}>
+            {/* Background elements to enhance the broadcast room feel */}
+            <div style={{ position: 'absolute', top: 0, left: '10%', width: '1px', height: '100%', background: 'rgba(255,255,255,0.05)' }}></div>
+            <div style={{ position: 'absolute', top: 0, right: '10%', width: '1px', height: '100%', background: 'rgba(255,255,255,0.05)' }}></div>
+
+            <div style={{ maxWidth: '1400px', width: '100%', margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: '4rem', alignItems: 'center', height: '100%' }}>
+
+                {/* Left side text content */}
+                <div style={{ flex: '1 1 400px', zIndex: 2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                        <span style={{ display: 'inline-block', width: '12px', height: '12px', background: 'var(--accent)', borderRadius: '50%', animation: 'blink 2s infinite' }}></span>
+                        <p style={{ fontFamily: 'monospace', color: 'var(--accent)', letterSpacing: '0.2em', fontSize: '0.9rem', margin: 0 }}>NEWS DESK</p>
+                    </div>
+                    <h2 className="accent-text" style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', marginBottom: '1.5rem', lineHeight: '0.9' }}>MEDIA &<br />EVENTS</h2>
+                    <p style={{ color: 'var(--subtext)', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '2rem' }}>
+                        Constant motion. Constant innovation. Tap into our live broadcasting feed to stay updated with structural advancements across the nation.
                     </p>
+                    <a href="#all-events" className="magnetic-btn" style={{ fontSize: '0.85rem', padding: '1rem 2rem', marginTop: 0, background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)' }}>ACCESS FULL TERMINAL</a>
                 </div>
-                <a href="#all-events" className="magnetic-btn" style={{ fontSize: '0.9rem', padding: '1rem 2rem', marginTop: 0 }}>VIEW ALL ARCHIVES</a>
+
+                {/* Right side Marquee Scroller */}
+                <div style={{
+                    flex: '1 1 500px',
+                    height: '80vh',
+                    position: 'relative',
+                    perspective: '1000px',
+                    display: 'flex',
+                    alignItems: 'center'
+                }}>
+                    {/* Top and bottom fade masks for the scrolling effect */}
+                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '150px', background: 'linear-gradient(to bottom, rgba(11,11,11,1), transparent)', zIndex: 5, pointerEvents: 'none' }}></div>
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '150px', background: 'linear-gradient(to top, rgba(11,11,11,1), transparent)', zIndex: 5, pointerEvents: 'none' }}></div>
+
+                    <div
+                        className="broadcast-marquee"
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '1rem',
+                            transformStyle: 'preserve-3d',
+                            animation: isHovered ? 'none' : 'scrollUp 25s linear infinite',
+                            animationPlayState: isHovered ? 'paused' : 'running',
+                            transform: 'rotateY(-15deg) rotateX(5deg)' // Angled perspective
+                        }}
+                    >
+                        {/* We map the data twice to create the infinite loop effect seamlessly */}
+                        {[...broadcastData, ...broadcastData, ...broadcastData].map((event, index) => (
+                            <BroadcastCard
+                                key={index}
+                                {...event}
+                                onHover={setIsHovered}
+                            />
+                        ))}
+                    </div>
+                </div>
             </div>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                gap: '2.5rem',
-                perspective: '1000px'
-            }}>
-                <MediaHoverCard
-                    date="24 FEB 2026"
-                    title="Anwar Ispat Unveils New High-Grade Steel Standard"
-                    desc="Setting unprecedented structural benchmarks with our newly patented 500W TMT multi-core rebars."
-                    img="https://images.unsplash.com/photo-1541888053158-b6fe071d3714?auto=format&fit=crop&q=80&w=600"
-                />
-                <MediaHoverCard
-                    date="15 JAN 2026"
-                    title="Annual Dealers Synergy Meet 2026"
-                    desc="A grand gathering of our finest partners sharing insights on scaling national mega-infrastructure."
-                    img="https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=600"
-                />
-                <MediaHoverCard
-                    date="05 DEC 2025"
-                    title="Green Factory Certification Awarded"
-                    desc="Recognized for exceptional commitment to reducing carbon footprints via advanced blast furnace technologies."
-                    img="https://images.unsplash.com/photo-1520699918507-3c3e05c46b0c?auto=format&fit=crop&q=80&w=600"
-                />
-            </div>
-        </div>
-    </section>
-)
+            <style jsx>{`
+                @keyframes scrollUp {
+                    0% { transform: rotateY(-15deg) rotateX(5deg) translateY(0); }
+                    100% { transform: rotateY(-15deg) rotateX(5deg) translateY(-50%); } 
+                }
+            `}</style>
+        </section>
+    );
+};
 
 const BlogFeatureCard = ({ category, title, readTime, img, delay }) => {
     const cardRef = useRef();
