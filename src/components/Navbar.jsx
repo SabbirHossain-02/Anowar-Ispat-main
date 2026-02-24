@@ -5,11 +5,14 @@ const Navbar = ({ onOpenContact }) => {
     const [scrolled, setScrolled] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [isLightMode, setIsLightMode] = useState(false);
+    const [isLightMode, setIsLightMode] = useState(true);
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('themeMode');
-        if (savedTheme === 'light') {
+        if (savedTheme === 'dark') {
+            setIsLightMode(false);
+            document.body.classList.remove('light-mode');
+        } else {
             setIsLightMode(true);
             document.body.classList.add('light-mode');
         }
